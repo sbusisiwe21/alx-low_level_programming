@@ -1,14 +1,14 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include "main.h"
 
 /**
- * read_textfile - Reads a text file and prints it to the POSIX standard output.
+ * read_textfile - Reads a text file and prints it to the standard output.
  * @filename: The name of the file to read.
  * @letters: The number of letters to read and print.
  *
- * Return: The actual number of letters read and printed, or 0 on failure.
+ * Return: The actual number of letters read and printed.
+ *         0 if the file cannot be opened or read, or if filename is NULL.
+ *         0 if write fails or does not write the expected amount of bytes.
  */
 ssize_t read_textfile(const char *filename, size_t letters)
 {
@@ -19,55 +19,34 @@ ssize_t read_textfile(const char *filename, size_t letters)
 	if (file == NULL)
 		return (0);
 
-	char *buffer = malloc(sizeof(char) * (letters + 1));  /* +1 for null terminator */
-	if (buffer == NULL)
+	char buffer[letters + 1];
+	ssize_t bytesRead = fread(buffer, sizeof(char), letters, file);
+
+	if (bytesRead == 0)
 	{
 		fclose(file);
 		return (0);
 	}
 
-	ssize_t numRead = fread(buffer, sizeof(char), letters, file);
-	if (numRead < 0)
-	{
-		free(buffer);
-		fclose(file);
-		return (0);
-	}
+	buffer[bytesRead] = '\0';
+	printf("%s", buffer);
 
-	buffer[numRead] = '\0';  /* Null-terminate the string */
-
-	ssize_t numWritten = fwrite(buffer, sizeof(char), numRead, stdout);
-	if (numWritten != numRead)
-	{
-		free(buffer);
-		fclose(file);
-		return (0);
-	}
-
-	free(buffer);
 	fclose(file);
-	return (numRead);
+	return (bytesRead);
 }
 
 /**
  * main - Entry point of the program.
  *
- * Return: 0 on success.
+ * Return: Always 0.
  */
 int main(void)
 {
 	const char *filename = "example.txt";
-	size_t letters_to_read = 100;
+	size_t letters = 100;
 
-	ssize_t numLettersRead = read_textfile(filename, letters_to_read);
-	if (numLettersRead == 0)
-	{
-		printf("Failed to read the file.\n");
-	}
-	else
-	{
-		printf("Number of letters read and printed: %zd\n", numLettersRead);
-	}
+	ssize_t bytesRead = read_textfile(filename, letters);
+	printf("Read %ld letters from the file.\n", bytesRead);
 
 	return (0);
 }
