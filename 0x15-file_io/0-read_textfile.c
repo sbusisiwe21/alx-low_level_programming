@@ -17,6 +17,9 @@ ssize_t read_textfile(const char *filename, size_t letters)
 
 	FILE *file = fopen(filename, "r");
 	if (file == NULL)
+
+
+
 		return (0);
 
 	char buffer[letters + 1];
@@ -46,7 +49,9 @@ int main(void)
 	size_t letters = 100;
 
 	ssize_t bytesRead = read_textfile(filename, letters);
+
 	printf("Read %ld letters from the file.\n", bytesRead);
+
 
 	return (0);
 }
