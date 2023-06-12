@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "main.h"
 
 /**
@@ -17,22 +19,32 @@ ssize_t read_textfile(const char *filename, size_t letters)
 	if (file == NULL)
 		return (0);
 
-	char buffer[letters + 1];  /* +1 for null terminator */
+	char *buffer = malloc(sizeof(char) * (letters + 1));  /* +1 for null terminator */
+	if (buffer == NULL)
+	{
+		fclose(file);
+		return (0);
+	}
+
 	ssize_t numRead = fread(buffer, sizeof(char), letters, file);
 	if (numRead < 0)
 	{
+		free(buffer);
 		fclose(file);
 		return (0);
 	}
 
 	buffer[numRead] = '\0';  /* Null-terminate the string */
 
-	if (ferror(file) != 0 || numRead != fwrite(buffer, sizeof(char), numRead, stdout))
+	ssize_t numWritten = fwrite(buffer, sizeof(char), numRead, stdout);
+	if (numWritten != numRead)
 	{
+		free(buffer);
 		fclose(file);
 		return (0);
 	}
 
+	free(buffer);
 	fclose(file);
 	return (numRead);
 }
