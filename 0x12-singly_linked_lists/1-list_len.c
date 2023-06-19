@@ -1,34 +1,21 @@
-#include <stddef.h> /* for size_t */
-
-/* Linked list node structure */
-typedef struct node
-{
-    int data;
-    struct node *next;
-} node_t;
-
-/* Linked list structure */
-typedef struct list
-{
-    node_t *head;
-} list_t;
+#include <stdlib.h>
+#include "lists.h"
 
 /**
- * list_len - Calculate the length of a linked list
- * @h: Pointer to the head of the list
+ * list_len - returns the number of elements in a linked list
+ * @h: pointer to the list_t list
  *
- * Return: The number of elements in the list
+ * Return: number of elements in h
  */
 size_t list_len(const list_t *h)
 {
-    size_t count = 0;
-    const node_t *current = h->head;
+	size_t n = 0;
 
-    while (current != NULL)
-    {
-        count++;
-        current = current->next;
-    }
-
-    return count;
+	while (h)
+	{
+		n++;
+		h = h->next;
+	}
+	return (n);
 }
+
