@@ -1,20 +1,21 @@
-#include "lists.h"
+#include <stdio.h>
 
-/**
- * listint_len - returns the number of the elements in a linked list
- *
- * Return: number of nodes
- */
-
-size_t listint_len(const listint_t *h)
-{
-	size_t num = 0;
-
-	while (h)
-	{
-		num++;
-		h = h->next;
-	}
-
-	return (num);
+// Function to calculate the length of a list
+int listLength(int* list) {
+    int length = 0;
+    while (*list != 0) {
+        length++;
+        list++;
+    }
+    return length;
 }
+
+int main() {
+    int myList[] = {1, 2, 3, 4, 5, 0};  // Example list with 5 elements
+    int length = listLength(myList);
+    
+    printf("Length of the list: %d\n", length);
+    
+    return 0;
+}
+
